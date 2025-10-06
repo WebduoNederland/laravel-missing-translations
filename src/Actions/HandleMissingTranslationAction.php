@@ -8,8 +8,15 @@ class HandleMissingTranslationAction
 {
     public function __invoke(string $key, array $replace, ?string $locale, bool $fallback): void
     {
-        $missingTranslation = MissingTranslation::query()
+        if (in_array($locale, config()->array('laravel-missing-translations.exclude_locales'))) {
+            return;
+        }
 
+        if (in_array($key, config()->array('laravel-missing-translations.exclude_translations'))) {
+            return;
+        }
+
+        $missingTranslation = MissingTranslation::query()
             ->where('key', '=', $key)
             ->first();
 
