@@ -16,6 +16,10 @@ class HandleMissingTranslationAction
             return;
         }
 
+        if (config()->boolean('laravel-missing-translations.skip_validation_translations', true) && str($key)->startsWith('validation.')) {
+            return;
+        }
+
         $missingTranslation = MissingTranslation::query()
             ->where('key', '=', $key)
             ->first();
